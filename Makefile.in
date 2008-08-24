@@ -1,0 +1,11 @@
+@make_variables@
+VPATH=@srcdir@
+OBJS=
+AUTODOC_SRC_IN=
+MODDIR=Public.pmod/Parser.pmod/
+MODNAME=JSON3
+MODULE_PMOD_IN=module.pmod.in
+MODULE_LDFLAGS=@LDFLAGS@ @LIBS@
+CONFIG_HEADERS=@CONFIG_HEADERS@
+@dynamic_module_makefile@
+@dependencies@

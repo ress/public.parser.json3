@@ -1,0 +1,177 @@
+// vim:syntax=lpc
+// all examples are taken from www.json.org
+//
+test_true(functionp(Public.Parser.JSON3.encode))
+test_true(functionp(Public.Parser.JSON3.decode))
+// test numbers
+test_true(Public.Parser.JSON3.decode("0E4") == 0.0)
+// test reference counter.
+// not sure how stable that is amoung pike versions....
+test_true(_refs(Public.Parser.JSON3.decode("\" It says little, does less, means nothing.\"")) == 1)
+test_true(_refs(Public.Parser.JSON3.decode(" { \"asd\" : 45 }  ")) == 1)
+test_true(_refs(Public.Parser.JSON3.decode(" [ 45, 34, 3, 4, 5 ] ")) == 1)
+// test examples from json.org
+test_true(equal(Public.Parser.JSON3.decode(
+"{\
+    \"glossary\": {\
+        \"title\": \"example glossary\",\
+	\"GlossDiv\": {\
+            \"title\": \"S\",\
+	    \"GlossList\": {\
+                \"GlossEntry\": {\
+                    \"ID\": \"SGML\",\
+		    \"SortAs\": \"SGML\",\
+		    \"GlossTerm\": \"Standard Generalized Markup Language\",\
+		    \"Acronym\": \"SGML\",\
+		    \"Abbrev\": \"ISO 8879:1986\",\
+		    \"GlossDef\": {\
+                        \"para\": \"A meta-markup language, used to create markup languages such as DocBook.\",\
+			\"GlossSeeAlso\": [\"GML\", \"XML\"]\
+                    },\
+		    \"GlossSee\": \"markup\"\
+                }\
+            }\
+        }\
+    }\
+}\
+"), ([
+    "glossary": ([
+        "title": "example glossary",
+	"GlossDiv": ([
+            "title": "S",
+	    "GlossList": ([
+                "GlossEntry": ([
+                    "ID": "SGML",
+		    "SortAs": "SGML",
+		    "GlossTerm": "Standard Generalized Markup Language",
+		    "Acronym": "SGML",
+		    "Abbrev": "ISO 8879:1986",
+		    "GlossDef": ([
+                        "para": "A meta-markup language, used to create markup languages such as DocBook.",
+			"GlossSeeAlso": ({"GML", "XML"})
+                    ]),
+		    "GlossSee": "markup"
+                ])
+            ])
+        ])
+    ])
+])))
+test_true(equal(Public.Parser.JSON3.decode(Public.Parser.JSON3.encode(([
+    "glossary": ([
+        "title": "example glossary",
+	"GlossDiv": ([
+            "title": "S",
+	    "GlossList": ([
+                "GlossEntry": ([
+                    "ID": "SGML",
+		    "SortAs": "SGML",
+		    "GlossTerm": "Standard Generalized Markup Language",
+		    "Acronym": "SGML",
+		    "Abbrev": "ISO 8879:1986",
+		    "GlossDef": ([
+                        "para": "A meta-markup language, used to create markup languages such as DocBook.",
+			"GlossSeeAlso": ({"GML", "XML"})
+                    ]),
+		    "GlossSee": "markup"
+                ])
+            ])
+        ])
+    ])
+]))), ([
+    "glossary": ([
+        "title": "example glossary",
+	"GlossDiv": ([
+            "title": "S",
+	    "GlossList": ([
+                "GlossEntry": ([
+                    "ID": "SGML",
+		    "SortAs": "SGML",
+		    "GlossTerm": "Standard Generalized Markup Language",
+		    "Acronym": "SGML",
+		    "Abbrev": "ISO 8879:1986",
+		    "GlossDef": ([
+                        "para": "A meta-markup language, used to create markup languages such as DocBook.",
+			"GlossSeeAlso": ({"GML", "XML"})
+                    ]),
+		    "GlossSee": "markup"
+                ])
+            ])
+        ])
+    ])
+])))
+test_true(equal(Public.Parser.JSON3.decode("    {	 \"menu\": 	{\
+  \"id\": \"file\",\
+  \"value\": \"File\",\
+  \"popup\": {\
+    \"menuitem\": [\
+      {\"value\": \"New\", 	\"onclick\": \"CreateNewDoc()\"},\
+      {\"value\": \"Open\", \"onclick\": \"OpenDoc()\"},\
+      {\"value\": \"Close\", \"onclick\": \"CloseDoc()\"}\
+    ]\
+  }\
+}	}\
+"), (["menu": ([
+  "id": "file",
+  "value": "File",
+  "popup": ([
+    "menuitem": ({
+      (["value": "New", "onclick": "CreateNewDoc()"]),
+      (["value": "Open", "onclick": "OpenDoc()"]),
+      (["value": "Close", "onclick": "CloseDoc()"])
+    })
+  ])
+])])))
+test_true(equal(Public.Parser.JSON3.decode("{\"menu\": {\
+    \"header\": \"SVG Viewer\",\
+    \"items\": [\
+        {\"id\": \"Open\"},\
+        {\"id\": \"OpenNew\", \"label\": \"Open New\"},\
+        null,\
+        {\"id\": \"ZoomIn\", \"label\": \"Zoom In\"},\
+        {\"id\": \"ZoomOut\", \"label\": \"Zoom Out\"},\
+        {\"id\": \"OriginalView\", \"label\": \"Original View\"},\
+        null,\
+        {\"id\": \"Quality\"},\
+        {\"id\": \"Pause\"},\
+        {\"id\": \"Mute\"},\
+        null,\
+        {\"id\": \"Find\", \"label\": \"Find...\"},\
+        {\"id\": \"FindAgain\", \"label\": \"Find Again\"},\
+        {\"id\": \"Copy\"},\
+        {\"id\": \"CopyAgain\", \"label\": \"Copy Again\"},\
+        {\"id\": \"CopySVG\", \"label\": \"Copy SVG\"},\
+        {\"id\": \"ViewSVG\", \"label\": \"View SVG\"},\
+        {\"id\": \"ViewSource\", \"label\": \"View Source\"},\
+        {\"id\": \"SaveAs\", \"label\": \"Save As\"},\
+        null,\
+        {\"id\": \"Help\"},\
+        {\"id\": \"About\", \"label\": \"About Adobe CVG Viewer...\"}\
+    ]\
+}}\
+"), (["menu": ([
+    "header": "SVG Viewer",
+    "items": ({
+        (["id": "Open"]),
+        (["id": "OpenNew", "label": "Open New"]),
+        0,
+        (["id": "ZoomIn", "label": "Zoom In"]),
+        (["id": "ZoomOut", "label": "Zoom Out"]),
+        (["id": "OriginalView", "label": "Original View"]),
+        0,
+        (["id": "Quality"]),
+        (["id": "Pause"]),
+        (["id": "Mute"]),
+        0,
+        (["id": "Find", "label": "Find..."]),
+        (["id": "FindAgain", "label": "Find Again"]),
+        (["id": "Copy"]),
+        (["id": "CopyAgain", "label": "Copy Again"]),
+        (["id": "CopySVG", "label": "Copy SVG"]),
+        (["id": "ViewSVG", "label": "View SVG"]),
+        (["id": "ViewSource", "label": "View Source"]),
+        (["id": "SaveAs", "label": "Save As"]),
+        0,
+        (["id": "Help"]),
+        (["id": "About", "label": "About Adobe CVG Viewer..."])
+    })
+])]) ))
