@@ -1,0 +1,12 @@
+#!/bin/sh
+
+MODULE_NAME=Public_Parser_JSON3
+MODULE_VERSION=$1
+MODULE_DIR=$MODULE_NAME-$MODULE_VERSION
+MODULE_FILES="configure configure.in module.pmod.in Makefile.in LICENSE AUTHORS testsuite.in"
+
+mkdir $MODULE_DIR/
+sed 's/__version = ".*"/__version = "'$MODULE_VERSION'"/' module.pmod.in > module.pmod.in2
+mv module.pmod.in2 module.pmod.in
+cp -X $MODULE_FILES $MODULE_DIR/
+tar -zpcf $MODULE_DIR.tar.gz $MODULE_DIR
